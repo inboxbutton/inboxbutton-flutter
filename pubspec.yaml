@@ -8,10 +8,16 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  pretty_dio_logger: ^1.1.1
+  json_annotation: ^4.5.0
+  retrofit: ^3.0.1+1
   flutter:
     sdk: flutter
 
 dev_dependencies:
+  json_serializable: '>4.4.0'
+  build_runner:
+  retrofit_generator: ^3.0.0+1
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
