@@ -1,0 +1,10 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part '{{snakeCase model}}.g.dart';
+
+@JsonSerializable()
+class {{properCase model}} {
+  factory {{properCase model}}.fromJson(Map<String, dynamic> json) =>
+      _${{properCase model}}FromJson(json);
+  Map<String, dynamic> toJson() => _${{properCase model}}ToJson(this);
+}

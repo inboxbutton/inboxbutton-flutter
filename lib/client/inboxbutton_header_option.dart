@@ -8,5 +8,5 @@ class InboxButtonHeaderOption {
       {required this.basePath,
       required this.apiKey,
       required this.userEmail,
-      this.isDebug = false});
+      required this.isDebug});
 }
