@@ -19,9 +19,9 @@ ConversationDto _$ConversationDtoFromJson(Map<String, dynamic> json) =>
       to: (json['to'] as List<dynamic>?)
           ?.map((e) => CreateParticipantDto.fromJson(e as Map<String, dynamic>))
           .toList(),
-      from: (json['from'] as List<dynamic>?)
-          ?.map((e) => CreateParticipantDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      from: json['from'] == null
+          ? null
+          : CreateParticipantDto.fromJson(json['from'] as Map<String, dynamic>),
       id: json['id'] as String?,
       subject: json['subject'] as String?,
       body: json['body'] as String?,

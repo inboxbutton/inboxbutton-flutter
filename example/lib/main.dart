@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/create_conversation_dto.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/enum.dart';
 import 'package:inboxbutton_flutter/inboxbutton_flutter.dart';
 
 void main() {
-  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    InboxButtonSdk.instance.setup("apiKey", "secretKey");
-    InboxButtonSdk.instance
-        .setUserEmail("robertdowneyjunior@scalingworks.asia");
-  });
+  InboxButtonSdk.instance.setup("apiKey", isDebug: true);
+
+  InboxButtonSdk.instance.setUserEmail("robertdowneyjunior@scalingworks.asia");
   runApp(const MyApp());
 }
 
@@ -81,41 +81,141 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+      body: ListView(
+        children: <Widget>[
+          ListTile(
+            onTap: () async {
+              // await InboxButtonSdk.instance
+              //     .createConversation(CreateConversationDto())
+              //     .catchError((onError) {
+              //   showDialog(
+              //     context: context,
+              //     builder: (_) => AlertDialog(
+              //       title: Text('Error'),
+              //       content: Text(
+              //         onError.toString(),
+              //       ),
+              //     ),
+              //   );
+              // });
+            },
+            title: Text("Create conversation"),
+          ),
+          //update conversation
+          ListTile(
+            onTap: () async {
+              // await InboxButtonSdk.instance
+              //     .updateConversation(CreateConversationDto())
+              //     .catchError((onError) {
+              //   showDialog(
+              //     context: context,
+              //     builder: (_) => AlertDialog(
+              //       title: Text('Error'),
+              //       content: Text(
+              //         onError.toString(),
+              //       ),
+              //     ),
+              //   );
+              // });
+            },
+            title: Text("Update conversation"),
+          ),
+
+          ListTile(
+            onTap: () async {
+              // try {
+              //   var response =
+              //       await InboxButtonSdk.instance.getUserConversations(
+              //     perPage: 10,
+              //     page: 1,
+              //   );
+              // } catch (e) {
+              //   print(e.toString());
+              // }
+            },
+            title: Text("List conversation"),
+          ),
+          //reply message
+
+          ListTile(
+            onTap: () async {
+              // try {
+              //   var response =
+              //       await InboxButtonSdk.instance.getUserConversations(
+              //     perPage: 10,
+              //     page: 1,
+              //   );
+              // } catch (e) {
+              //   print(e.toString());
+              // }
+            },
+            title: Text("Get conversation"),
+          ),
+          //read conversation
+          ListTile(
+            onTap: () async {
+              // try {
+              //   var response =
+              //       await InboxButtonSdk.instance.getUserConversations(
+              //     perPage: 10,
+              //     page: 1,
+              //   );
+              // } catch (e) {
+              //   print(e.toString());
+              // }
+            },
+            title: Text("Read conversation"),
+          ),
+          //delete conversation
+          ListTile(
+            onTap: () async {
+              // try {
+              //   var response =
+              //       await InboxButtonSdk.instance.getUserConversations(
+              //     perPage: 10,
+              //     page: 1,
+              //   );
+              // } catch (e) {
+              //   print(e.toString());
+              // }
+            },
+            title: Text("Delete conversation"),
+          ),
+          //Get message
+          ListTile(
+            onTap: () async {
+              // try {
+              //   var response =
+              //       await InboxButtonSdk.instance.getUserConversations(
+              //     perPage: 10,
+              //     page: 1,
+              //   );
+              // } catch (e) {
+              //   print(e.toString());
+              // }
+            },
+            title: Text("Get messages"),
+          ),
+          ListTile(
+            onTap: () async {
+              // await InboxButtonSdk.instance
+              //     .replyMessage(CreateConversationDto())
+              //     .catchError((onError) {
+              //   showDialog(
+              //     context: context,
+              //     builder: (_) => AlertDialog(
+              //       title: Text('Error'),
+              //       content: Text(
+              //         onError.toString(),
+              //       ),
+              //     ),
+              //   );
+              // });
+            },
+            title: Text("Reply message"),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

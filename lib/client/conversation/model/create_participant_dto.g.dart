@@ -9,9 +9,9 @@ part of 'create_participant_dto.dart';
 CreateParticipantDto _$CreateParticipantDtoFromJson(
         Map<String, dynamic> json) =>
     CreateParticipantDto(
-      json['externalId'] as String?,
-      json['email'] as String?,
-      json['name'] as String?,
+      externalId: json['externalId'] as String?,
+      email: json['email'] as String,
+      name: json['name'] as String?,
     );
 
 Map<String, dynamic> _$CreateParticipantDtoToJson(

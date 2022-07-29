@@ -1,4 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/conversation_dto.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/create_conversation_dto.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/paginated_conversation_dto.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/paginated_message_dto.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/reply_conversation_dto.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/update_conversation_dto.dart';
 import 'package:inboxbutton_flutter/client/inboxbutton_header_option.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:retrofit/retrofit.dart';
@@ -14,11 +20,11 @@ abstract class ConversationApiClient {
       _ConversationApiClient;
 
   static const int CONNECTION_TIME = 10;
-  static const basePath = 'https://dev-api.inboxbutton.com/v1';
+  static const basePath = 'https://dev-api.inboxbutton.com/v1/conversations';
 
   static Dio getDio(InboxButtonHeaderOption option) {
     var dio = Dio(BaseOptions(
-        baseUrl: option.basePath,
+        baseUrl: basePath,
         connectTimeout: CONNECTION_TIME * 1000,
         receiveTimeout: CONNECTION_TIME * 1000));
 
@@ -34,154 +40,43 @@ abstract class ConversationApiClient {
     return dio;
   }
 
-  // @POST("/conversations")
-  // Future<HttpResponse<LoginResponse>> login(@Body() LoginRequest request);
+  @POST("/conversations")
+  Future<HttpResponse<ConversationDto>> createConversation(
+      @Body() CreateConversationDto request);
 
-  // // Method
-  // @GET("/api/bootstrap")
-  // Future<HttpResponse<BootstrapResponse>> getBootstrap();
-  //
-  // @POST("/api/auth/login")
-  // Future<HttpResponse<LoginResponse>> login(@Body() LoginRequest request);
-  //
-  // @POST("/api/auth/register")
-  // Future<HttpResponse<RegisterResponse>> register(
-  //     @Body() RegisterRequest request);
-  //
-  // @GET("/api/me/profile")
-  // Future<HttpResponse<MeResponse>> me();
-  //
-  // @POST("/api/auth/refresh")
-  // Future<HttpResponse<RefreshResponse>> refresh(@Body() RefreshRequest request);
-  //
-  // @POST("/api/auth/logout")
-  // Future<HttpResponse<LogoutResponse>> logout();
-  //
-  // @POST("/api/auth/change-password")
-  // Future<HttpResponse<ChangePasswordResponse>> changePassword(
-  //     @Body() ChangePasswordRequest request);
-  //
-  // @POST("/api/auth/otp")
-  // Future<HttpResponse<OtpResponse>> otp(
-  //     @Body() OtpRequest request, @Query("isResend") bool isResend);
-  //
-  // @POST("/api/auth/recovery")
-  // Future<HttpResponse<RecoveryResponse>> recovery(
-  //     @Body() RecoveryRequest request);
-  //
-  // @POST("/api/auth/reset-password")
-  // Future<HttpResponse<ResetPasswordResponse>> resetPassword(
-  //     @Body() ResetPasswordRequest request);
-  //
-  // @GET("/api/auth/wallet")
-  // Future<HttpResponse<WalletResponse>> wallet();
-  //
-  // @POST("/api/auth/account-deletion")
-  // Future<HttpResponse<ResultResponse>> deleteAccount();
-  //
-  // @POST("/api/dna/user-profiles")
-  // Future<HttpResponse<CreateDnaProfileResponse>> createDnaProfile(
-  //     @Body() CreateDnaProfileRequest request);
-  //
-  // @GET("/api/dna/user-profiles")
-  // Future<HttpResponse<List<GetDnaProfileListResponse>>> getDnaProfileList();
-  //
-  // @GET("/api/dna/user-profiles/{id}?join=tracking")
-  // Future<HttpResponse<GetDnaProfileResponse>> getDnaProfile(
-  //     @Path("id") String id);
-  //
-  // @GET("/api/advisors")
-  // Future<HttpResponse<List<AdvisorResponse>>> getAdvisors(
-  //     @Query("filter") String? type,
-  //     @Query("filter") String? category,
-  //     @Query("limit") int limit,
-  //     @Query("page") int page);
-  //
-  // @GET("/api/advisors/{id}")
-  // Future<HttpResponse<AdvisorResponse>> getAdvisorDetail(@Path("id") String id);
-  //
-  // @GET("/api/appointments/advisors/{consultantId}/available-dates")
-  // Future<HttpResponse<List<AppointmentDateResponse>>>
-  //     getAppointmentAvailableDate(@Path("consultantId") String consultantId);
-  //
-  // @GET("/api/appointments/advisors/{consultantId}/available-dates/{date}/slots")
-  // Future<HttpResponse<List<AppointmentTimeResponse>>>
-  //     getAppointmentAvailableTime(
-  //         @Path("consultantId") String consultantId, @Path("date") String date);
-  //
-  // @POST("/api/appointments")
-  // Future<HttpResponse<AppointmentCreateResponse>> createAppointment(
-  //     @Body() AppointmentCreateRequest request);
-  //
-  // @POST("/api/promotions/apply")
-  // Future<HttpResponse<AppointmentPromoResponse>> getPromoCode(
-  //     @Body() AppointmentPromoRequest request);
-  //
-  // @PATCH("/api/appointments/{appointmentId}")
-  // Future<HttpResponse<AppointmentCreateResponse>> cancelAppointment(
-  //     @Path("appointmentId") String appointmentId,
-  //     @Body() AppointmentCancelRequest request);
-  //
-  // @POST("/api/appointment-orders")
-  // Future<HttpResponse<AppointmentCreateOrderResponse>> createAppointmentOrder(
-  //     @Body() AppointmentCreateOrderRequest request);
-  //
-  // @POST("/api/appointments/{appointmentId}/reschedule")
-  // Future<HttpResponse<AppointmentCreateResponse>> rescheduleAppointment(
-  //     @Path("appointmentId") String appointmentId,
-  //     @Body() AppointmentRescheduleRequest request);
-  //
-  // @GET("/api/dna/reports/{id}")
-  // Future<HttpResponse<List<DnaReportResponse>>> getDnaReport(
-  //     @Path("id") String id);
-  //
-  // @GET("/api/dna/reports/{id}/categories/{categoryId}")
-  // Future<HttpResponse<List<DnaDiseaseResponse>>> getDnaDisease(
-  //     @Path("id") String id, @Path("categoryId") String categoryId);
-  //
-  // @GET("/api/dna/diseases/{id}")
-  // Future<HttpResponse<DnaDiseaseDetail>> getDnaDiseaseDetail(
-  //     @Path("id") String id);
-  //
-  // @GET("/api/appointments/upload")
-  // Future<HttpResponse<AttachmentResponse>> getSignedUrl(
-  //     @Query("fileName") String fileName, @Query("mimeType") String mimeType);
-  //
-  // @GET("/api/appointments/upcoming")
-  // Future<HttpResponse<List<AppointmentBookingResponse>>> getAppointmentBookings(
-  //     @Query("join") String advisor,
-  //     @Query("limit") int limit,
-  //     @Query("page") int page);
-  //
-  // @GET("/api/appointments/cancelled")
-  // Future<HttpResponse<List<AppointmentBookingResponse>>> getCancelledBookings(
-  //     @Query("join") String advisor,
-  //     @Query("limit") int limit,
-  //     @Query("page") int page);
-  //
-  // @GET("/api/appointments/histories")
-  // Future<HttpResponse<List<AppointmentBookingResponse>>>
-  //     getAppointmentBookingsHistory(@Query("join") String advisor,
-  //         @Query("limit") int limit, @Query("page") int page);
-  //
-  // @GET("/api/appointments/{id}")
-  // Future<HttpResponse<AppointmentBookingResponse>> getAppointmentWithId(
-  //     @Path("id") String appointmentId, @Query("join") String advisor);
-  //
-  // @GET("/api/user-notifications?limit={take}}&page={page}")
-  // Future<HttpResponse<List<UserNotification>>> getNotifications(
-  //     @Query("page") int page, @Query("take") int take);
-  //
-  // @GET("/api/user-notifications/{id}")
-  // Future<HttpResponse<UserNotification>> getNotificationDetail(
-  //     @Path("id") String id);
-  //
-  // @DELETE("/api/user-notifications/{id}")
-  // Future<HttpResponse> deleteNotification(@Path("id") String id);
-  //
-  // @POST("/api/user-notifications/{id}/read")
-  // Future<HttpResponse> readNotification(@Path("id") String id);
-  //
-  // @GET("/api/appointments/advisor-packages")
-  // Future<HttpResponse<List<AppointmentIAPResponse>>> getInAppPurchasePackages();
+  @PUT("/conversations/{id}")
+  Future<HttpResponse<ConversationDto>> updateConversation(
+      @Path("id") String id, @Body() UpdateConversationDto request);
+
+  @GET("/conversations")
+  Future<HttpResponse<PaginatedConversationDto>> getUserConversation(
+      @Header(RequestInterceptor.X_USER_EMAIL) String email,
+      @Query("page") int page,
+      @Query("perPage") int perPage,
+      @Query("category") String? category);
+
+  @GET("/conversations/search")
+  Future<HttpResponse<ConversationDto>> searchConversation(
+      @Query("q") String category);
+
+  @POST("/conversations/{id}/messages")
+  Future<HttpResponse<ConversationDto>> replyMessage(
+      @Path("id") String conversationId, @Body() ReplyConversationDto request);
+
+  @GET("/conversations/{id}")
+  Future<HttpResponse<ConversationDto>> getConversation(@Path("id") String id);
+
+  @GET("/conversations/{id}/messages")
+  Future<HttpResponse<PaginatedMessageDto>> getMessage(
+    @Path("id") String conversationId,
+    @Query("page") int page,
+    @Query("perPage") int perPage,
+  );
+
+  @PATCH("/conversations/{id}/read")
+  Future<HttpResponse<ConversationDto>> readConversation(@Path("id") String id);
+
+  @DELETE("/conversations/{id}")
+  Future<HttpResponse<ConversationDto>> deleteConversation(
+      @Path("id") String id);
 }

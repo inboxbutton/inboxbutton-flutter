@@ -14,7 +14,7 @@ class ConversationDto {
   @JsonKey(unknownEnumValue: ConversationStatus.Unknown)
   ConversationStatus? status;
   List<CreateParticipantDto>? to;
-  List<CreateParticipantDto>? from;
+  CreateParticipantDto? from;
   String? id;
   String? subject;
   String? body;

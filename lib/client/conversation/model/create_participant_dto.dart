@@ -6,11 +6,11 @@ part 'create_participant_dto.g.dart';
 class CreateParticipantDto {
   String? externalId;
 
-  String? email;
+  String email;
 
   String? name;
 
-  CreateParticipantDto(this.externalId, this.email, this.name);
+  CreateParticipantDto({this.externalId, required this.email, this.name});
 
   factory CreateParticipantDto.fromJson(Map<String, dynamic> json) =>
       _$CreateParticipantDtoFromJson(json);

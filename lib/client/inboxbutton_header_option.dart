@@ -1,12 +1,8 @@
 class InboxButtonHeaderOption {
-  final String basePath;
   final String apiKey;
-  final String userEmail;
+  String? userEmail;
   final bool isDebug;
 
   InboxButtonHeaderOption(
-      {required this.basePath,
-      required this.apiKey,
-      required this.userEmail,
-      required this.isDebug});
+      {required this.apiKey, this.userEmail, required this.isDebug});
 }
