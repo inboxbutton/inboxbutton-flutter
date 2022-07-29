@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:inboxbutton_flutter/client/conversation/model/create_conversation_dto.dart';
@@ -85,153 +86,189 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: [
+          //setting icon button
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Builder(
-        builder: (BuildContext context) => ListView(
-          children: <Widget>[
-            ListTile(
-              title: const Text("Create conversation"),
-              onTap: () async {
-                try {
-                  var requestJson = jsonDecode(await rootBundle
-                      .loadString("assets/create_conversation.json"));
-                  var createConversationDto =
-                      CreateConversationDto.fromJson(requestJson);
-                  var response = await InboxButtonSdk.instance
-                      .createConversation(createConversationDto);
-                  conversationId = response.id ?? "";
-                  await showModal(context, response.toJson(), requestJson);
-                } on InboxButtonException catch (onError) {
-                  await showModal(
-                      context, onError.errorResponse.toJson(), null);
-                }
-              },
+        builder: (BuildContext context) => Column(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text("Conversation ID: $conversationId"),
+                ),
+                //Copy icon button
+                IconButton(
+                  icon: const Icon(Icons.content_copy),
+                  onPressed: () {
+                    FlutterClipboard.copy(conversationId)
+                        .then((value) => showSnackBar(context, "Copied"));
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              title: const Text("Update conversation"),
-              onTap: () async {
-                try {
-                  if (conversationId.isEmpty) {
-                    showSnackBar(context, "Please create conversation first");
-                    return;
-                  }
-                  var requestJson = jsonDecode(await rootBundle
-                      .loadString("assets/update_conversation.json"));
-                  var updateConversationDto =
-                      UpdateConversationDto.fromJson(requestJson);
-                  var response = await InboxButtonSdk.instance
-                      .updateConversation(
-                          conversationId, updateConversationDto);
-                  await showModal(context, response.toJson(), requestJson);
-                } on InboxButtonException catch (onError) {
-                  await showModal(
-                      context, onError.errorResponse.toJson(), null);
-                }
-              },
-            ),
-            ListTile(
-              title: const Text("list conversation"),
-              onTap: () async {
-                try {
-                  var response =
-                      await InboxButtonSdk.instance.listConversation();
-                  await showModal(context, response.toJson(), null);
-                } on InboxButtonException catch (onError) {
-                  await showModal(
-                      context, onError.errorResponse.toJson(), null);
-                }
-              },
-            ),
-            ListTile(
-              title: const Text("Get conversation"),
-              onTap: () async {
-                try {
-                  if (conversationId.isEmpty) {
-                    showSnackBar(context, "Please create conversation first");
-                    return;
-                  }
-                  var response = await InboxButtonSdk.instance
-                      .getConversation(conversationId);
-                  await showModal(context, response.toJson(), null);
-                } on InboxButtonException catch (onError) {
-                  await showModal(
-                      context, onError.errorResponse.toJson(), null);
-                }
-              },
-            ),
-            ListTile(
-              title: const Text("read conversation"),
-              onTap: () async {
-                try {
-                  if (conversationId.isEmpty) {
-                    showSnackBar(context, "Please create conversation first");
-                    return;
-                  }
-                  var response = await InboxButtonSdk.instance
-                      .readConversation(conversationId);
-                  await showModal(context, response.toJson(), null);
-                } on InboxButtonException catch (onError) {
-                  await showModal(
-                      context, onError.errorResponse.toJson(), null);
-                }
-              },
-            ),
-            ListTile(
-              title: const Text("Delete conversation"),
-              onTap: () async {
-                try {
-                  if (conversationId.isEmpty) {
-                    showSnackBar(context, "Please create conversation first");
-                    return;
-                  }
-                  var response = await InboxButtonSdk.instance
-                      .deleteConversation(conversationId);
-                  conversationId = "";
-                  await showModal(context, response.toJson(), null);
-                } on InboxButtonException catch (onError) {
-                  await showModal(
-                      context, onError.errorResponse.toJson(), null);
-                }
-              },
-            ),
-            ListTile(
-              title: const Text("Get messages by conversation id"),
-              onTap: () async {
-                try {
-                  if (conversationId.isEmpty) {
-                    showSnackBar(context, "Please create conversation first");
-                    return;
-                  }
-                  var response =
-                      await InboxButtonSdk.instance.getMessages(conversationId);
-                  conversationId = "";
-                  await showModal(context, response.toJson(), null);
-                } on InboxButtonException catch (onError) {
-                  await showModal(
-                      context, onError.errorResponse.toJson(), null);
-                }
-              },
-            ),
-            ListTile(
-              title: const Text("Reply conversation"),
-              onTap: () async {
-                try {
-                  if (conversationId.isEmpty) {
-                    showSnackBar(context, "Please create conversation first");
-                    return;
-                  }
-                  var requestJson = jsonDecode(await rootBundle
-                      .loadString("assets/reply_conversation.json"));
-                  var replyConversationDto =
-                      ReplyConversationDto.fromJson(requestJson);
-                  var response = await InboxButtonSdk.instance
-                      .replyConversation(conversationId, replyConversationDto);
-                  await showModal(context, response.toJson(), null);
-                } on InboxButtonException catch (onError) {
-                  await showModal(
-                      context, onError.errorResponse.toJson(), null);
-                }
-              },
+            ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                ListTile(
+                  title: const Text("Create conversation"),
+                  onTap: () async {
+                    try {
+                      var requestJson = jsonDecode(await rootBundle
+                          .loadString("assets/create_conversation.json"));
+                      var createConversationDto =
+                          CreateConversationDto.fromJson(requestJson);
+                      var response = await InboxButtonSdk.instance
+                          .createConversation(createConversationDto);
+                      conversationId = response.id ?? "";
+                      setState(() {});
+                      await showModal(context, response.toJson(), requestJson);
+                    } on InboxButtonException catch (onError) {
+                      await showModal(
+                          context, onError.errorResponse.toJson(), null);
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text("Update conversation"),
+                  onTap: () async {
+                    try {
+                      if (conversationId.isEmpty) {
+                        showSnackBar(
+                            context, "Please create conversation first");
+                        return;
+                      }
+                      var requestJson = jsonDecode(await rootBundle
+                          .loadString("assets/update_conversation.json"));
+                      var updateConversationDto =
+                          UpdateConversationDto.fromJson(requestJson);
+                      var response = await InboxButtonSdk.instance
+                          .updateConversation(
+                              conversationId, updateConversationDto);
+                      await showModal(context, response.toJson(), requestJson);
+                    } on InboxButtonException catch (onError) {
+                      await showModal(
+                          context, onError.errorResponse.toJson(), null);
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text("list conversation"),
+                  onTap: () async {
+                    try {
+                      var response =
+                          await InboxButtonSdk.instance.listConversation();
+                      await showModal(context, response.toJson(), null);
+                    } on InboxButtonException catch (onError) {
+                      await showModal(
+                          context, onError.errorResponse.toJson(), null);
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text("Get conversation"),
+                  onTap: () async {
+                    try {
+                      if (conversationId.isEmpty) {
+                        showSnackBar(
+                            context, "Please create conversation first");
+                        return;
+                      }
+                      var response = await InboxButtonSdk.instance
+                          .getConversation(conversationId);
+                      await showModal(context, response.toJson(), null);
+                    } on InboxButtonException catch (onError) {
+                      await showModal(
+                          context, onError.errorResponse.toJson(), null);
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text("read conversation"),
+                  onTap: () async {
+                    try {
+                      if (conversationId.isEmpty) {
+                        showSnackBar(
+                            context, "Please create conversation first");
+                        return;
+                      }
+                      var response = await InboxButtonSdk.instance
+                          .readConversation(conversationId);
+                      await showModal(context, response.toJson(), null);
+                    } on InboxButtonException catch (onError) {
+                      await showModal(
+                          context, onError.errorResponse.toJson(), null);
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text("Delete conversation"),
+                  onTap: () async {
+                    try {
+                      if (conversationId.isEmpty) {
+                        showSnackBar(
+                            context, "Please create conversation first");
+                        return;
+                      }
+                      var response = await InboxButtonSdk.instance
+                          .deleteConversation(conversationId);
+                      conversationId = "";
+                      setState(() {});
+                      await showModal(context, response.toJson(), null);
+                    } on InboxButtonException catch (onError) {
+                      await showModal(
+                          context, onError.errorResponse.toJson(), null);
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text("Get messages by conversation id"),
+                  onTap: () async {
+                    try {
+                      if (conversationId.isEmpty) {
+                        showSnackBar(
+                            context, "Please create conversation first");
+                        return;
+                      }
+                      var response = await InboxButtonSdk.instance
+                          .getMessages(conversationId);
+                      await showModal(context, response.toJson(), null);
+                    } on InboxButtonException catch (onError) {
+                      await showModal(
+                          context, onError.errorResponse.toJson(), null);
+                    }
+                  },
+                ),
+                ListTile(
+                  title: const Text("Reply conversation"),
+                  onTap: () async {
+                    try {
+                      if (conversationId.isEmpty) {
+                        showSnackBar(
+                            context, "Please create conversation first");
+                        return;
+                      }
+                      var requestJson = jsonDecode(await rootBundle
+                          .loadString("assets/reply_conversation.json"));
+                      var replyConversationDto =
+                          ReplyConversationDto.fromJson(requestJson);
+                      var response = await InboxButtonSdk.instance
+                          .replyConversation(
+                              conversationId, replyConversationDto);
+                      await showModal(context, response.toJson(), null);
+                    } on InboxButtonException catch (onError) {
+                      await showModal(
+                          context, onError.errorResponse.toJson(), null);
+                    }
+                  },
+                ),
+              ],
             ),
           ],
         ),

@@ -29,6 +29,7 @@ environment:
 dependencies:
   inboxbutton_flutter:
     path: ../
+  clipboard: ^0.1.3
   flutter:
     sdk: flutter
 
