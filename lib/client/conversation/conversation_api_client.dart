@@ -50,7 +50,7 @@ abstract class ConversationApiClient {
 
   @GET("/conversations")
   Future<HttpResponse<PaginatedConversationDto>> getUserConversation(
-      @Header(RequestInterceptor.X_USER_EMAIL) String email,
+      @Header(RequestInterceptor.X_USER_EMAIL) String? email,
       @Query("page") int page,
       @Query("perPage") int perPage,
       @Query("category") String? category);

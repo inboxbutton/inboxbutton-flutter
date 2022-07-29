@@ -1,0 +1,31 @@
+{
+  "subject": "Avenger Assemble!",
+  "tags": ["important", "urgent", "test"],
+  "message": {
+    "body": "My initial message from creator@email.com",
+    "attachments": [
+      {
+        "title": "Sample file",
+        "size": "100 KB",
+        "mimeType": "application/pdf",
+        "url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+      }
+    ]
+  },
+  "from": {
+    "name": "Robert Downey Junior",
+    "email": "creator@email.com"
+  },
+  "to": [
+    {
+      "name": "Chris hemsworth",
+      "email": "receiver1@email.com"
+    },
+    {
+      "name": "Chris Evans",
+      "email": "receiver2@email.com"
+    }
+  ],
+  "channels": ["Email", "MobilePush"],
+  "status": "Draft"
+}

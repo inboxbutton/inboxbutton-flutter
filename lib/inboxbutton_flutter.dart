@@ -6,6 +6,9 @@ import 'package:dio/dio.dart';
 import 'package:inboxbutton_flutter/client/conversation/conversation_api_client.dart';
 import 'package:inboxbutton_flutter/client/conversation/model/create_conversation_dto.dart';
 import 'package:inboxbutton_flutter/client/conversation/model/paginated_conversation_dto.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/paginated_message_dto.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/reply_conversation_dto.dart';
+import 'package:inboxbutton_flutter/client/conversation/model/update_conversation_dto.dart';
 import 'package:inboxbutton_flutter/client/error_response.dart';
 import 'package:inboxbutton_flutter/inboxbutton_exception.dart';
 
@@ -32,18 +35,109 @@ class InboxButtonSdk {
 
   Future<ConversationDto> createConversation(
       CreateConversationDto request) async {
-    var response = await ConversationApiClient(
-            ConversationApiClient.getDio(_conversationApiHeaderOption))
-        .createConversation(request)
-        .catchError((error) {
-      if (error is DioError) {
-        var unwrapped = error.error;
-        if (unwrapped is InboxButtonException) {
-          Future.error(unwrapped);
-        }
-      }
-    });
-    return response.data;
+    try {
+      return (await ConversationApiClient(
+                  ConversationApiClient.getDio(_conversationApiHeaderOption))
+              .createConversation(request))
+          .data;
+    } on DioError catch (error) {
+      throw InboxButtonException(
+          ErrorResponse.fromJson(error.response?.data ?? {}));
+    }
+  }
+
+  Future<ConversationDto> updateConversation(
+      String id, UpdateConversationDto request) async {
+    try {
+      return (await ConversationApiClient(
+                  ConversationApiClient.getDio(_conversationApiHeaderOption))
+              .updateConversation(id, request))
+          .data;
+    } on DioError catch (error) {
+      throw InboxButtonException(
+          ErrorResponse.fromJson(error.response?.data ?? {}));
+    }
+  }
+
+  //List conversation
+  Future<PaginatedConversationDto> listConversation(
+      {int page = 1, int perPage = 10}) async {
+    try {
+      return (await ConversationApiClient(
+                  ConversationApiClient.getDio(_conversationApiHeaderOption))
+              .getUserConversation(null, page, perPage, null))
+          .data;
+    } on DioError catch (error) {
+      throw InboxButtonException(
+          ErrorResponse.fromJson(error.response?.data ?? {}));
+    }
+  }
+
+  //get conversation by id
+  Future<ConversationDto> getConversation(String id) async {
+    try {
+      return (await ConversationApiClient(
+                  ConversationApiClient.getDio(_conversationApiHeaderOption))
+              .getConversation(id))
+          .data;
+    } on DioError catch (error) {
+      throw InboxButtonException(
+          ErrorResponse.fromJson(error.response?.data ?? {}));
+    }
+  }
+
+  //read conversation by id
+  Future<ConversationDto> readConversation(String id) async {
+    try {
+      return (await ConversationApiClient(
+                  ConversationApiClient.getDio(_conversationApiHeaderOption))
+              .readConversation(id))
+          .data;
+    } on DioError catch (error) {
+      throw InboxButtonException(
+          ErrorResponse.fromJson(error.response?.data ?? {}));
+    }
+  }
+
+  //delete conversation by id
+  Future<ConversationDto> deleteConversation(String id) async {
+    try {
+      return (await ConversationApiClient(
+                  ConversationApiClient.getDio(_conversationApiHeaderOption))
+              .deleteConversation(id))
+          .data;
+    } on DioError catch (error) {
+      throw InboxButtonException(
+          ErrorResponse.fromJson(error.response?.data ?? {}));
+    }
+  }
+
+  //get messages by conversation id
+  Future<PaginatedMessageDto> getMessages(String id,
+      {int page = 1, int perPage = 10}) async {
+    try {
+      return (await ConversationApiClient(
+                  ConversationApiClient.getDio(_conversationApiHeaderOption))
+              .getMessage(id, page, perPage))
+          .data;
+    } on DioError catch (error) {
+      throw InboxButtonException(
+          ErrorResponse.fromJson(error.response?.data ?? {}));
+    }
+  }
+
+  //reply conversation by id
+  Future<ConversationDto> replyConversation(
+      String id, ReplyConversationDto replyConversationDto) async {
+    try {
+      return (await ConversationApiClient(
+                  ConversationApiClient.getDio(_conversationApiHeaderOption))
+              .replyMessage(id, replyConversationDto))
+          .data;
+    } on DioError catch (error) {
+      throw InboxButtonException(
+          ErrorResponse.fromJson(error.response?.data ?? {}));
+    }
   }
 
   //update conversation

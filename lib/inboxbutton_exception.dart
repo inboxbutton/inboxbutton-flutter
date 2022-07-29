@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'client/error_response.dart';
 
 class InboxButtonException implements Exception {
@@ -7,6 +9,8 @@ class InboxButtonException implements Exception {
 
   @override
   String toString() {
-    return errorResponse.message ?? "";
+    JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+    var jsonString = encoder.convert(errorResponse);
+    return jsonString;
   }
 }
