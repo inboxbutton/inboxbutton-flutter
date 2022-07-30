@@ -107,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 IconButton(
                   icon: const Icon(Icons.content_copy),
                   onPressed: () {
+                    if (conversationId.isEmpty) return;
                     FlutterClipboard.copy(conversationId)
                         .then((value) => showSnackBar(context, "Copied"));
                   },
@@ -159,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
                 ListTile(
-                  title: const Text("list conversation"),
+                  title: const Text("List conversation"),
                   onTap: () async {
                     try {
                       var response =
@@ -190,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
                 ListTile(
-                  title: const Text("read conversation"),
+                  title: const Text("Read conversation"),
                   onTap: () async {
                     try {
                       if (conversationId.isEmpty) {
