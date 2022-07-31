@@ -8,6 +8,8 @@ import 'package:inboxbutton_flutter_app/screen/conversation_list/provider/conver
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../conversation_detail/conversation_detail_screen.dart';
+
 class ConversationListScreen extends StatefulWidget {
   static Widget get route => ChangeNotifierProvider(
         create: (context) => ConversationListModel(),
@@ -78,26 +80,26 @@ class _ConversationListScreenState extends State<ConversationListScreen> {
   }
 
   Widget _sectionContent(ConversationListModel model) {
-    var loanList = model.conversationDtoList;
+    var conversationList = model.conversationDtoList;
     return ListView.separated(
-        itemBuilder: (context, index) => _biddingItem(context, model, index),
+        itemBuilder: (context, index) =>
+            _conversationItem(context, model, index),
         separatorBuilder: (context, index) => Divider(),
-        itemCount: loanList.length);
+        itemCount: conversationList.length);
   }
 
-  Widget _biddingItem(
+  Widget _conversationItem(
       BuildContext context, ConversationListModel model, int index) {
-    var loan = model.conversationDtoList[index];
-    // var hasRead = loan.seenAt != null;
-    var hasRead = null;
-    var htmlString = loan.body ?? "";
+    var conversationId = model.conversationDtoList[index];
+    var htmlString = conversationId.body ?? "";
     List<String> cleanStrings = [];
     List<dom.Element> ps =
         parse(htmlString.replaceAll('<br>', '</p><p>')).querySelectorAll('p');
-    if (ps.isNotEmpty)
-      ps.forEach((f) {
+    if (ps.isNotEmpty) {
+      for (var f in ps) {
         if (f.text != '') cleanStrings.add(f.text);
-      });
+      }
+    }
     return ListTile(
       dense: true,
       visualDensity: VisualDensity.compact,
@@ -105,12 +107,12 @@ class _ConversationListScreenState extends State<ConversationListScreen> {
       leading: CircleAvatar(
         backgroundColor: Colors.grey,
         child: Text(
-          (loan.from?.name ?? "A").substring(0, 1),
+          (conversationId.from?.name ?? "A").substring(0, 1),
           style: TextStyle(color: Colors.white),
         ),
       ),
       title: Text(
-        "${loan.subject ?? ""}",
+        "${conversationId.subject ?? ""}",
       ),
       subtitle: cleanStrings.isNotEmpty
           ? Text(
@@ -119,218 +121,19 @@ class _ConversationListScreenState extends State<ConversationListScreen> {
               maxLines: 1,
             )
           : Text(
-              loan.body ?? "",
+              conversationId.body ?? "",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-      // Text(
-      //   "${loan.content ?? ""}",
-      //   style:
-      //       hasRead ? AppTextStyle.darkText12w400 : AppTextStyle.darkText12w500,
-      //   maxLines: 1,
-      //   overflow: TextOverflow.ellipsis,
-      // ),
-      // trailing: hasRead
-      //     ? null
-      //     : Container(
-      //         width: 9,
-      //         height: 9,
-      //         decoration: BoxDecoration(
-      //             shape: BoxShape.circle,
-      //             color: MyColors.pinkishRed,
-      //             border: Border.all(color: MyColors.pinkishRed))),
-      onTap: () {},
+      onTap: () {
+        //navigate to Conversation Detail Screen
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ConversationDetailScreen.route(conversationId.id ?? "")));
+      },
     );
-    // return Container(
-    //   color: MyColors.cardBackground,
-    //   child: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.stretch,
-    //     children: [
-    //       GestureDetector(
-    //         onTap: () {
-    //           if (loan.totalBids > 0)
-    //             Get.to(UserNotificationDetailRoute.route,
-    //                 arguments: UserNotificationDetailArgument(id: loan.id));
-    //         },
-    //         behavior: HitTestBehavior.translucent,
-    //         child: Container(
-    //           decoration: BoxDecoration(
-    //               color: MyColors.darkGreen,
-    //               borderRadius: const BorderRadius.only(
-    //                   topLeft: Radius.circular(Dimens.common_container_radius),
-    //                   topRight:
-    //                       Radius.circular(Dimens.common_container_radius))),
-    //           padding:
-    //               EdgeInsets.symmetric(horizontal: Dimens.common_padding_small),
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               Expanded(
-    //                 child: Text(
-    //                   "${loan.id}",
-    //                   style: AppTextStyle.whiteText18w700,
-    //                 ),
-    //               ),
-    //               IgnorePointer(
-    //                 child: IconButton(
-    //                     icon: SvgPicture.asset(
-    //                       Utils.getImgPath('ic_right'),
-    //                       color: MyColors.whiteText,
-    //                     ),
-    //                     onPressed: () {}),
-    //               )
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //       Padding(
-    //         padding: EdgeInsets.symmetric(
-    //             horizontal: Dimens.common_padding_small,
-    //             vertical: Dimens.common_padding_extra_small),
-    //         child: Row(
-    //           children: [
-    //             Expanded(
-    //               flex: 5,
-    //               child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [
-    //                   Text(
-    //                       "${loan.financingType == FinancingType.businessFinancing ? "Company" : "Applicant"}",
-    //                       style: AppTextStyle.greyText14w400),
-    //                   Text(
-    //                     "${loan.name}",
-    //                     style: AppTextStyle.whiteText14w700,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //             Expanded(
-    //               flex: 5,
-    //               child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [
-    //                   Text("Type", style: AppTextStyle.greyText14w400),
-    //                   Text(
-    //                     "${loan.financingType.name.titleCase}",
-    //                     style: AppTextStyle.whiteText14w700,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //       Padding(
-    //         padding: EdgeInsets.only(
-    //             left: Dimens.common_padding_small,
-    //             right: Dimens.common_padding_small,
-    //             top: Dimens.common_padding_small,
-    //             bottom: Dimens.common_bar_gap),
-    //         child: Row(
-    //           children: [
-    //             Expanded(
-    //               flex: 5,
-    //               child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [
-    //                   Text("Financing Amount",
-    //                       style: AppTextStyle.greyText14w400),
-    //                   Text(
-    //                     "${loan.amount.toAppCurrencyFormat()}",
-    //                     style: AppTextStyle.whiteText14w700,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //             Expanded(
-    //               flex: 5,
-    //               child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [
-    //                   Container(
-    //                     child: Text("Payback Period",
-    //                         style: AppTextStyle.greyText14w400),
-    //                   ),
-    //                   Text(
-    //                     "${loan.paybackPeriod} months",
-    //                     style: AppTextStyle.whiteText14w700,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //       MyDivider(
-    //         indent: 0,
-    //         height: 16,
-    //       ),
-    //       Padding(
-    //         padding: EdgeInsets.only(
-    //             left: Dimens.common_padding_small,
-    //             right: Dimens.common_padding_small,
-    //             bottom: Dimens.common_padding_smaller,
-    //             top: Dimens.common_padding_extra_small),
-    //         child: Row(
-    //           children: [
-    //             Expanded(
-    //               flex: 5,
-    //               child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [
-    //                   Text("UserNotification Start",
-    //                       style: AppTextStyle.greyText14w400),
-    //                   Text(
-    //                     "${DateTime.tryParse(loan.startAt ?? "").displayAppFormat}",
-    //                     style: AppTextStyle.whiteText14w700,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //             Expanded(
-    //               flex: 5,
-    //               child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [
-    //                   Text("UserNotification End",
-    //                       style: AppTextStyle.greyText14w400),
-    //                   Text(
-    //                     "${DateTime.tryParse(loan.endAt ?? "").displayAppFormat}",
-    //                     style: AppTextStyle.whiteText14w700,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //       if (loan.totalBids == 0)
-    //         AppFilledTextButton(
-    //           text: "No offer yet",
-    //           callback: () {},
-    //           color: MyColors.disabled,
-    //         ),
-    //       if (loan.totalBids == 1)
-    //         AppFilledTextButton(
-    //           text: "You have received 1 offer!",
-    //           callback: () {
-    //             Get.to(UserNotificationDetailRoute.route,
-    //                 arguments: UserNotificationDetailArgument(id: loan.id));
-    //           },
-    //           color: MyColors.orange,
-    //         ),
-    //       if (loan.totalBids > 1)
-    //         AppFilledTextButton(
-    //           text: "You have received ${loan.totalBids} offers!",
-    //           callback: () {
-    //             Get.to(UserNotificationDetailRoute.route,
-    //                 arguments: UserNotificationDetailArgument(id: loan.id));
-    //           },
-    //           color: MyColors.orange,
-    //         )
-    //     ],
-    //   ),
-    // );
   }
 
   Widget _emptyView() {
